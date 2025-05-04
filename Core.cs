@@ -40,7 +40,7 @@ namespace PropertyUpgrades
             MelonPreferences.CreateEntry("PropertyUpgrades", "MaxEmployeeCount", 15, "Max Employee Count", "Maximum employee count a property can have");
             MelonPreferences.CreateEntry("PropertyUpgrades", "MaxLoadingDocks", 5, "Max Loading Docks", "Maximum loading docks a player can buy for a property");
             MelonPreferences.CreateEntry("PropertyUpgrades", "MaxAdditionalGrowthRate", 5.0, "Max Add Growth Rate", "Maximum additional growth rate a player can get");
-            MelonPreferences.CreateEntry("PropertyUpgrades", "MaxMixTimeReduction", 4, "Max Mix Time Reduction", "Maximum time PER ITEM reduction a mixer can have (mk1 & 2)");
+            MelonPreferences.CreateEntry("PropertyUpgrades", "MaxMixTimeReduction", 4, "Max Mix Time Reduction", "Maximum time(seconds) PER ITEM reduction a mixer can have (mk1 & 2)");
             MelonPreferences.Save();
             LoggerInstance.Msg("Initialized.");
         }
