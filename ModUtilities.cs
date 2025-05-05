@@ -77,10 +77,34 @@ namespace PropertyUpgrades
 
         public static void AddExtraDock(Property targetProperty, ExtraLoadingDock loadingDock)
         {
+            if (targetProperty.LoadingDockCount < 1) {
+                MelonLogger.Msg(1);
+                Property baseProperty = Property.Properties.Find((property) => property.PropertyName == "Barn");
+                MelonLogger.Msg(2);
+                if (baseProperty == null)
+                {
+                    MelonLogger.Msg(3);
+                    MelonLogger.Error($"Failed to find base property for loading dock: Barn");
+                    return;
+                }
+                MelonLogger.Msg(4);
+                GameObject baseDockGO = baseProperty.LoadingDocks[0].gameObject;
+                MelonLogger.Msg(5);
+                GameObject cloneDockGO = UnityEngine.Object.Instantiate(baseDockGO, loadingDock.Position, Quaternion.Euler(loadingDock.Rotation));
+                MelonLogger.Msg(6);
+                LoadingDock cloneDock = cloneDockGO.GetComponent<LoadingDock>();
+                MelonLogger.Msg(7);
+                cloneDock.ParentProperty = targetProperty;
+                MelonLogger.Msg(8);
+                targetProperty.LoadingDocks = targetProperty.LoadingDocks.Append(cloneDockGO.GetComponent<LoadingDock>()).ToArray();
+                MelonLogger.Msg(9);
+                return;
+            }
+            MelonLogger.Msg(10);
+            MelonLogger.Msg($"Adding extra loading dock to {targetProperty.LoadingDockCount} at {loadingDock.Position}");
             GameObject baseLoadingDockGO = targetProperty.LoadingDocks[0].gameObject;
 
             GameObject cloneLoadingDockGO = UnityEngine.Object.Instantiate(baseLoadingDockGO, loadingDock.Position, Quaternion.Euler(loadingDock.Rotation));
-            DecalProjector cloneDecal = cloneLoadingDockGO.GetComponentInChildren<DecalProjector>();
             targetProperty.LoadingDocks = targetProperty.LoadingDocks.Append(cloneLoadingDockGO.GetComponent<LoadingDock>()).ToArray();
         }
 

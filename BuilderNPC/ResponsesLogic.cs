@@ -50,23 +50,7 @@ namespace PropertyUpgrades.BuilderNPC
             try
             {
                 saveManager.Load();
-                this.ownedProperties = Property.OwnedProperties.Where((p) => p.PropertyName != "RV").ToList();
-                this.ownedProperties.ForEach(property =>
-                {
-                    if (saveManager.saveData.ContainsKey(property.PropertyName))
-                    {
-                        return;
-                    }
-                    // Initial property data
-                    PropertyData propertyData = new PropertyData {
-                        EmployeeCapacity = property.EmployeeCapacity,
-                        MixTimePerItemReduction = 0,
-                        ExtraGrowSpeedMultiplier = 1f,
-                        ExtraLoadingDocks = []
-                    };
-                    saveManager.saveData.Add(property.PropertyName, propertyData);
-                });
-                saveManager.Save();
+                MelonCoroutines.Start(UpdateProperties(true));
             }
             catch (Exception ex){
                 MelonLogger.Error(ex);
@@ -113,7 +97,7 @@ namespace PropertyUpgrades.BuilderNPC
             float addLoadingBayPrice = (float)propertyData.ExtraLoadingDocks.Length == 0 ? 10000 : (float)propertyData.ExtraLoadingDocks.Length * 10000;
             List<Response> responses = new List<Response>() {
                 new Response { Text = "I'm in place", OnTriggered = () => MelonCoroutines.Start(this.UpgradeProperty(PropertyUpgrade.AddLoadingDock, addLoadingBayPrice)) },
-                new Response { Text = "Go back", OnTriggered = () => this.SendAction(Action.UpgradeProperty) },
+                new Response { Text = "Go back", OnTriggered = () => this.Reset() },
             };
 
             this.ShowResponses(responses, "Move to the location you want the new loading bay to be placed");
@@ -122,6 +106,7 @@ namespace PropertyUpgrades.BuilderNPC
         // Is remove dock?
         private IEnumerator ShowPropertiesResponse()
         {
+            MelonCoroutines.Start(UpdateProperties());
             List<Response> responses = new List<Response>();
             foreach (Property property in ownedProperties)
             {
@@ -133,6 +118,26 @@ namespace PropertyUpgrades.BuilderNPC
             }
             this.ShowResponses(responses, "I can help you with that. Which property would you like to upgrade?");
             yield break;
+        }
+
+        private IEnumerator UpdateProperties(bool save = false)
+        {
+            this.ownedProperties = Property.OwnedProperties.Where((property) => {
+                if (property.PropertyName == "RV") return false;
+                if (saveManager.saveData.ContainsKey(property.PropertyName)) return true;
+                // Initial property data
+                PropertyData propertyData = new PropertyData
+                {
+                    EmployeeCapacity = property.EmployeeCapacity,
+                    MixTimePerItemReduction = 0,
+                    ExtraGrowSpeedMultiplier = 1f,
+                    ExtraLoadingDocks = []
+                };
+                saveManager.saveData.Add(property.PropertyName, propertyData);
+                return true;
+            }).ToList();
+            if (!save) yield break;
+            saveManager.Save();
         }
 
         private IEnumerator ShowRemoveBayResponses()
@@ -188,11 +193,11 @@ namespace PropertyUpgrades.BuilderNPC
             float addLoadingBayPrice = (float)propertyData.ExtraLoadingDocks.Length == 0 ? 10000 : (float)propertyData.ExtraLoadingDocks.Length * 10000;
 
             List<Response> upgradeOptions = new List<Response> {
-                new Response { Text = "Go back", OnTriggered = () => this.SendAction(Action.UpgradeProperty) },
+                new Response { Text = "Go back", OnTriggered = () => this.Reset() },
             };
 
             Limits limits = new Limits();
-            if (this.targetProperty.EmployeeCapacity < limits.MaxEmployeeCount)
+            if (this.targetProperty.EmployeeCapacity < limits.MaxEmployeeCount && this.targetProperty.PropertyName != "Motel Room")
                 upgradeOptions.Add(new Response { Text = $"+1 Employee (${addEmployeePrice})", OnTriggered = () => MelonCoroutines.Start(this.UpgradeProperty(PropertyUpgrade.AddEmployee, addEmployeePrice)) });
             if (this.targetProperty.LoadingDocks.Length < limits.MaxLoadingDocks)
                 upgradeOptions.Add(new Response { Text = $"+1 Loading Bay (${addLoadingBayPrice})", OnTriggered = () => this.SendAction(Action.PositionLoadingBay) });
@@ -260,7 +265,6 @@ namespace PropertyUpgrades.BuilderNPC
                     break;
                 case PropertyUpgrade.AddLoadingDock:
                     moneyManager.CreateOnlineTransaction("Property Upgrade", -price, 1, $"Loading dock upgrade ({targetProperty.PropertyName})");
-                    GameObject baseLoadingDockGO = this.targetProperty.LoadingDocks[0].gameObject;
 
                     Vector3 playerPos = this.player.transform.position;
                     Quaternion playerRot = this.player.transform.rotation;
