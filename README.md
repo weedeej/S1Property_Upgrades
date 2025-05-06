@@ -1,4 +1,4 @@
-# Property Upgrades Mod
+# Property Upgrades Mod (ALTERNATE/MONO)
 
 NOT A CHEAT MOD! Need an extra loading bay? An additional employee? Faster mixing? Faster plant growth? Buy an upgrade for it.
 
@@ -17,6 +17,12 @@ NOT A CHEAT MOD! Need an extra loading bay? An additional employee? Faster mixin
 2.  **Download:** Download the latest version of the mod from [releases](https://github.com/weedeej/S1Property_Upgrades/releases/latest).
 3.  **Installation:** Extract the downloaded files into your game's root directory.
 
+When installing S1API, Please verify that:
+```
+"S1API.Mono.MelonLoader.dll" in Mods folder
+"S1APILoader.MelonLoader.dll" in Plugins folder
+```
+
 ## Configuration
 
 You can configure this mod from `<Schedule One Directory>/UserData/MelonPreferences.cfg` (Requires game restart)
@@ -34,6 +40,10 @@ MaxAdditionalGrowthRate = 5.0
 # Maximum time PER ITEM reduction a mixer can have (mk1 & 2)
 MaxMixTimeReduction = 4
 ```
+
+## Translation
+You can set your own translation of this mod from `<Schedule One Directory>/UserData/PropertyUpgrades_Translation.cfg`
+**Please credit and LINK the mod if you are uploading a translation!!!!**
 
 ## Bug Reports and Feedback
 

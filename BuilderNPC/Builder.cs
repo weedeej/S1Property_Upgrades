@@ -9,7 +9,7 @@ namespace PropertyUpgrades.BuilderNPC
 {
     public class Builder : NPC
     {
-        public Builder() : base("builder_npc", "Builder", "")
+        public Builder() : base("builder_npc", MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "BuilderNPC_Name"), "")
         {}
 
         public static Builder InitBuilder(ModSaveManager saveManager)
