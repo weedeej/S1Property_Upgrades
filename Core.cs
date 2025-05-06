@@ -9,7 +9,7 @@ using ScheduleOne.Property;
 using System.Collections;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(PropertyUpgrades.Core), "PropertyUpgrades", "1.0.1", "weedeej", null)]
+[assembly: MelonInfo(typeof(PropertyUpgrades.Core), "PropertyUpgrades", "1.0.2", "weedeej", null)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace PropertyUpgrades
