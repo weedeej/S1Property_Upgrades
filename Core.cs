@@ -84,6 +84,7 @@ namespace PropertyUpgrades
             MelonPreferences.CreateEntry("PropertyUpgrades_Translation", "UpgradeProperty", "Upgrade Property");
             MelonPreferences.CreateEntry("PropertyUpgrades_Translation", "RemoveDock", "Remove Loading Dock");
             MelonPreferences.Save();
+            ModSaveManager.ClearTemp();
             LoggerInstance.Msg("Initialized.");
         }
 
@@ -102,12 +103,6 @@ namespace PropertyUpgrades
             ModSaveManager modSaveManager = new ModSaveManager();
             SaveManager.Instance.onSaveStart.AddListener(modSaveManager.Save);
             Builder.InitBuilder(modSaveManager);
-        }
-
-        public override void OnApplicationQuit()
-        {
-            base.OnApplicationQuit();
-            ModSaveManager.ClearTemp();
         }
     }
 }
