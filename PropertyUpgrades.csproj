@@ -6,8 +6,8 @@
 		<RootNamespace>PropertyUpgrades</RootNamespace>
 		<LangVersion>default</LangVersion>
 		<IsPackable>false</IsPackable>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>
+		<AssemblyVersion>1.0.3</AssemblyVersion>
+		<FileVersion>1.0.3</FileVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<AssemblyName>PropertyUpgrades</AssemblyName>
 		<LangVersion>latest</LangVersion>
