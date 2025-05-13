@@ -29,7 +29,8 @@ namespace PropertyUpgrades
     }
     public class ModSaveManager
     {
-        private string saveFilePath;
+        private string saveFilePath = null;
+        private string tempSaveFilePath = null;
         public Dictionary<string, PropertyData> saveData = new Dictionary<string, PropertyData>();
 
         public ModSaveManager()
@@ -39,6 +40,7 @@ namespace PropertyUpgrades
             string idSlotPath = saveDirectory.Substring(separatorIndex);
             string[] idSlotArr = idSlotPath.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
             this.saveFilePath = Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades", $"{idSlotArr[0]}_{idSlotArr[1]}.json");
+            this.tempSaveFilePath = Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades", $"_temp_{idSlotArr[0]}_{idSlotArr[1]}.json");
             // Initialize the save manager
             if (!Directory.Exists(Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades")))
             {
@@ -59,6 +61,19 @@ namespace PropertyUpgrades
             }
         }
 
+        public void SaveTemp()
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(this.saveData, Formatting.Indented);
+                File.WriteAllText(this.tempSaveFilePath, json);
+            }
+            catch (Exception ex)
+            {
+                MelonLogger.Error($"Failed to save data: {ex.Message}");
+            }
+        }
+
         public ModSaveManager Load()
         {
             if (!File.Exists(this.saveFilePath))
@@ -67,11 +82,35 @@ namespace PropertyUpgrades
             }
             string json = File.ReadAllText(this.saveFilePath);
             this.saveData = JsonConvert.DeserializeObject<Dictionary<string, PropertyData>>(json);
-            foreach (var property in this.saveData)
-            {
-                ModUtilities.ApplyPropertyData(Property.Properties.Find((p) => p.PropertyName == property.Key), property.Value);
-            }
             return this;
+        }
+
+        public ModSaveManager LoadTemp()
+        {
+            if (!File.Exists(this.tempSaveFilePath) && !File.Exists(this.saveFilePath))
+            {
+                return this;
+            }
+            string json = File.ReadAllText(File.Exists(this.tempSaveFilePath) ? this.tempSaveFilePath : this.saveFilePath);
+            this.saveData = JsonConvert.DeserializeObject<Dictionary<string, PropertyData>>(json);
+            return this;
+        }
+
+        public static void ClearTemp()
+        {
+            // Delete all temp files
+            string[] tempFiles = Directory.GetFiles(Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades"), "_temp_*.json");
+            foreach (string file in tempFiles)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    MelonLogger.Error($"Failed to delete temp file: {ex.Message}");
+                }
+            }
         }
     }
 }

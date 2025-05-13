@@ -202,9 +202,9 @@ namespace PropertyUpgrades.BuilderNPC
             if (this.targetProperty.LoadingDocks.Length < limits.MaxLoadingDocks)
                 upgradeOptions.Add(new Response { Text = MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "AddLoadingDock").Replace("{{Price}}", addLoadingBayPrice.ToString()), OnTriggered = () => this.SendAction(Action.PositionLoadingBay) });
             if (propertyData.ExtraGrowSpeedMultiplier < limits.MaxAdditionalGrowthRate)
-                upgradeOptions.Add(new Response { Text = MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "AddPlantGrowth").Replace("{{Price}}", addEmployeePrice.ToString()), OnTriggered = () => MelonCoroutines.Start(this.UpgradeProperty(PropertyUpgrade.AddPlantGrowthMultipler, extraGrowSpeedPrice)) });
+                upgradeOptions.Add(new Response { Text = MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "AddPlantGrowth").Replace("{{Price}}", extraGrowSpeedPrice.ToString()), OnTriggered = () => MelonCoroutines.Start(this.UpgradeProperty(PropertyUpgrade.AddPlantGrowthMultipler, extraGrowSpeedPrice)) });
             if (propertyData.MixTimePerItemReduction < limits.MaxMixTimeReduction)
-                upgradeOptions.Add(new Response { Text = MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "ReduceMixTime").Replace("{{Price}}", addEmployeePrice.ToString()), OnTriggered = () => MelonCoroutines.Start(this.UpgradeProperty(PropertyUpgrade.ReduceMixingTime, mixTimeReductionPrice)) });
+                upgradeOptions.Add(new Response { Text = MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "ReduceMixTime").Replace("{{Price}}", mixTimeReductionPrice.ToString()), OnTriggered = () => MelonCoroutines.Start(this.UpgradeProperty(PropertyUpgrade.ReduceMixingTime, mixTimeReductionPrice)) });
             if (upgradeOptions.Count == 1)
             {
                 this.Reset(MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "NoUpgrades").Replace("{{PropertyName}}", this.targetProperty.PropertyName));
@@ -256,16 +256,11 @@ namespace PropertyUpgrades.BuilderNPC
                     moneyManager.CreateOnlineTransaction("Property Upgrade", -price, 1, $"Mixing time upgrade ({targetProperty.PropertyName})");
                     
                     MixingStation[] mixingStations = ModUtilities.GetBuildableItemScriptsFromProperty<MixingStation>(this.targetProperty);
-                    MixingStationMk2[] mixingStationsMk2 = ModUtilities.GetBuildableItemScriptsFromProperty<MixingStationMk2>(this.targetProperty);
+                    propertyData.MixTimePerItemReduction += 1;
                     foreach (MixingStation mixingStation in mixingStations)
                     {
-                        mixingStation.MixTimePerItem -= 1;
+                        ModUtilities.ApplyMixingUpgrade(mixingStation, propertyData.MixTimePerItemReduction);
                     }
-                    foreach (MixingStationMk2 mixingStationMk2 in mixingStationsMk2)
-                    {
-                        mixingStationMk2.MixTimePerItem -= 1;
-                    }
-                    propertyData.MixTimePerItemReduction += 1;
                     this.npc.SendTextMessage(MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "MixerUpgrade").Replace("{{PropertyName}}", this.targetProperty.PropertyName));
                     break;
                 case PropertyUpgrade.AddLoadingDock:
@@ -278,8 +273,8 @@ namespace PropertyUpgrades.BuilderNPC
 
                     this.npc.SendTextMessage(MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "LoadingDockUpgrade").Replace("{{PropertyName}}", this.targetProperty.PropertyName));
                     break;
-
             }
+            saveManager.SaveTemp();
             this.Reset(MelonPreferences.GetEntryValue<string>("PropertyUpgrades_Translation", "WhatElse"));
         }
 

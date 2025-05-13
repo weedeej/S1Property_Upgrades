@@ -130,23 +130,17 @@ namespace PropertyUpgrades
             {
                 AddExtraDock(property, extraDock);
             }
+        }
 
-            // Timing
-            Pot[] pots = ModUtilities.GetBuildableItemScriptsFromProperty<Pot>(property);
-            MixingStation[] mixingStations = ModUtilities.GetBuildableItemScriptsFromProperty<MixingStation>(property);
-            MixingStationMk2[] mixingStationsMk2 = ModUtilities.GetBuildableItemScriptsFromProperty<MixingStationMk2>(property);
-            foreach (var pot in pots)
+        // Mixtime
+        public static void ApplyMixingUpgrade(MixingStation mixingStation, int mixTimeReduction)
+        {
+            if (mixingStation.MixTimePerItem - mixTimeReduction <= 1)
             {
-                pot.GrowSpeedMultiplier += propertyData.ExtraGrowSpeedMultiplier;
+                mixingStation.MixTimePerItem = 1;
+                return;
             }
-            foreach (var mixingStation in mixingStations)
-            {
-                mixingStation.MixTimePerItem -= propertyData.MixTimePerItemReduction;
-            }
-            foreach (var mixingStationMk2 in mixingStationsMk2)
-            {
-                mixingStationMk2.MixTimePerItem -= propertyData.MixTimePerItemReduction;
-            }
+            mixingStation.MixTimePerItem -= mixTimeReduction;
         }
     }
 
