@@ -98,6 +98,10 @@ namespace PropertyUpgrades
 
         public static void ClearTemp()
         {
+            if (!Directory.Exists(Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades")))
+            {
+                Directory.CreateDirectory(Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades"));
+            }
             // Delete all temp files
             string[] tempFiles = Directory.GetFiles(Path.Combine(MelonEnvironment.UserDataDirectory, "Property Upgrades"), "_temp_*.json");
             foreach (string file in tempFiles)
