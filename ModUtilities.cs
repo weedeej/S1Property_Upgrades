@@ -39,7 +39,7 @@ namespace PropertyUpgrades
     }
     public class ModUtilities
     {
-        public static float PlayerYDistanceToSubtractForDecal = 0.7762f; 
+        public static float PlayerYDistanceToSubtractForDecal = 0.9762f; 
 
         public static T[] GetBuildableItemScriptsFromProperty<T>(Property property) where T : class
         {
@@ -59,7 +59,7 @@ namespace PropertyUpgrades
 
         public static void AddExtraDock(Property targetProperty, Vector3 playerPos, Quaternion playerRot, bool addToSaveManager = false, ModSaveManager saveManager = null)
         {
-            Vector3 newDockPos = new Vector3(playerPos.x, 0, playerPos.z);
+            Vector3 newDockPos = new Vector3(playerPos.x, playerPos.y - PlayerYDistanceToSubtractForDecal, playerPos.z);
             ExtraLoadingDock saveObj = new ExtraLoadingDock
             {
                 Position = newDockPos,
