@@ -1,14 +1,14 @@
 ﻿using MelonLoader.Utils;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using ScheduleOne.Delivery;
-using ScheduleOne.ObjectScripts;
-using ScheduleOne.Property;
+using Il2CppScheduleOne.Delivery;
+using Il2CppScheduleOne.ObjectScripts;
+using Il2CppScheduleOne.Property;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using MelonLoader;
 
-using S1NPC = ScheduleOne.NPCs.NPC;
+using S1NPC = Il2CppScheduleOne.NPCs.NPC;
 
 namespace PropertyUpgrades
 {
@@ -43,7 +43,7 @@ namespace PropertyUpgrades
 
         public static T[] GetBuildableItemScriptsFromProperty<T>(Property property) where T : class
         {
-            return (from x in property.BuildableItems
+            return (from x in property.BuildableItems._items
                     where x is T
                     select x as T).ToArray();
         }
@@ -79,7 +79,8 @@ namespace PropertyUpgrades
         {
             if (targetProperty.LoadingDockCount < 1) {
                 MelonLogger.Msg(1);
-                Property baseProperty = Property.Properties.Find((property) => property.PropertyName == "Barn");
+                Property baseProperty = Property.Properties._items
+                    .FirstOrDefault(property => property.PropertyName == "Barn");
                 MelonLogger.Msg(2);
                 if (baseProperty == null)
                 {

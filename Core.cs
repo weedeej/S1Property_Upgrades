@@ -2,14 +2,15 @@
 using MelonLoader;
 using MelonLoader.Utils;
 using PropertyUpgrades.BuilderNPC;
-using ScheduleOne.Delivery;
-using ScheduleOne.EntityFramework;
-using ScheduleOne.ObjectScripts;
-using ScheduleOne.Persistence;
-using ScheduleOne.PlayerScripts;
-using ScheduleOne.Property;
+using Il2CppScheduleOne.Delivery;
+using Il2CppScheduleOne.EntityFramework;
+using Il2CppScheduleOne.ObjectScripts;
+using Il2CppScheduleOne.Persistence;
+using Il2CppScheduleOne.PlayerScripts;
+using Il2CppScheduleOne.Property;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [assembly: MelonInfo(typeof(PropertyUpgrades.Core), "PropertyUpgrades", "1.0.4", "weedeej", null)]
 [assembly: MelonGame("TVGS", "Schedule I")]
@@ -25,7 +26,9 @@ namespace PropertyUpgrades
             {
                 return;
             }
-
+            
+            MelonLogger.Msg($"debug: {__instance.PropertyName}");
+            
             ModSaveManager modSaveManager = new ModSaveManager().Load();
             if (modSaveManager.saveData.ContainsKey(__instance.PropertyName))
             {
@@ -101,7 +104,7 @@ namespace PropertyUpgrades
         {
             yield return new WaitForSeconds(3f);
             ModSaveManager modSaveManager = new ModSaveManager();
-            SaveManager.Instance.onSaveStart.AddListener(modSaveManager.Save);
+            SaveManager.Instance.onSaveStart.AddListener((UnityAction)modSaveManager.Save);
             Builder.InitBuilder(modSaveManager);
         }
     }

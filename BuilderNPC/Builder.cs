@@ -2,8 +2,8 @@
 using S1API.Entities;
 using System.Collections;
 using UnityEngine;
-using S1NPC = ScheduleOne.NPCs.NPC;
-using S1NPCManager = ScheduleOne.NPCs.NPCManager;
+using S1NPC = Il2CppScheduleOne.NPCs.NPC;
+using S1NPCManager = Il2CppScheduleOne.NPCs.NPCManager;
 
 namespace PropertyUpgrades.BuilderNPC
 {
@@ -34,7 +34,7 @@ namespace PropertyUpgrades.BuilderNPC
 
         private static IEnumerator ResetCoro(ModSaveManager saveManager)
         {
-            yield return new WaitUntil(() => NPC.Get<Builder>() != null);
+            yield return new WaitUntil(new Func<bool>(() => NPC.Get<Builder>() != null));
             NPC builder = NPC.Get<Builder>();
             ResponsesLogic responsesLogic = new ResponsesLogic(builder, saveManager);
         }
