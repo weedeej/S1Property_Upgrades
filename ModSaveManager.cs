@@ -1,8 +1,8 @@
 ﻿using MelonLoader;
 using MelonLoader.Utils;
 using Newtonsoft.Json;
-using ScheduleOne.Persistence;
-using ScheduleOne.Property;
+using Il2CppScheduleOne.Persistence;
+using Il2CppScheduleOne.Property;
 using UnityEngine;
 
 namespace PropertyUpgrades
