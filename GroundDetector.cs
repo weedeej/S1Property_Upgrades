@@ -1,18 +1,16 @@
-﻿using UnityEngine;
+﻿using MelonLoader;
+using UnityEngine;
+
+[RegisterTypeInIl2Cpp]
 public class GroundDetector : MonoBehaviour
 {
-    [Header("Detection Settings")]
-    [Tooltip("How far down from the origin point to check.")]
-    [SerializeField] private float detectionDistance = 1.1f;
-
-    [Tooltip("Which physics layers should be considered 'ground' or 'interactable below'?")]
-    [SerializeField] private LayerMask groundLayerMask;
-
-    [Tooltip("Optional offset from the player's transform position to start the raycast.")]
-    [SerializeField] private Vector3 originOffset = Vector3.zero;
-
-    [Tooltip("Should the detection ignore trigger colliders? Usually true for ground checks.")]
-    [SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
+    private float detectionDistance = 1.1f;
+    
+    private LayerMask groundLayerMask;
+    
+    private Vector3 originOffset = Vector3.zero;
+    
+    private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
 
 
     private GameObject _objectCurrentlyUnderneath = null;
